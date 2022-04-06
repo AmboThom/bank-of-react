@@ -8,13 +8,13 @@ class Home extends Component {
         return (
             <div className="App">
                 <h1>Bank of React</h1>
-                <h4><em>What's in your JavaScript</em></h4>
-
+                <h4><em>What's in your JavaScript?</em></h4>
+                
                 <Link to="/userProfile"><button>User Profile</button></Link>
-                <br/>
                 <Link to="/login"><button>Login</button></Link>
-
-                <AccountBalance accountBalance={this.props.AccountBalance}/>
+                <Link to="/credits"><button>Credits</button></Link>
+                <br/><br/>
+                <AccountBalance accountBalance={this.props.accountBalance}/>
             </div>
         );
     }
