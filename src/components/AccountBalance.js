@@ -1,7 +1,5 @@
 import React from 'react';
 
-
-
 const AccountBalance = (props) => {
     return (
         <div>
@@ -11,8 +9,6 @@ const AccountBalance = (props) => {
         </div>
     );
 }
-
-
 
 export default AccountBalance;
 
