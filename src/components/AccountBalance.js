@@ -1,16 +1,15 @@
-import React, {Component} from 'react';
+import React from 'react';
 
 
-class AccountBalance extends Component {
-    render() {
-        return (
-            <div>
-                <strong>
-                    {`Current Balance: $${this.props.accountBalance}`}
-                </strong>
-            </div>
-        );
-    }
+
+const AccountBalance = (props) => {
+    return (
+        <div>
+            <strong>
+                {`Current Balance: $${props.accountBalance}`}
+            </strong>
+        </div>
+    );
 }
 
 
