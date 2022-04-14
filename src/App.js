@@ -42,19 +42,6 @@ const App = () => {
     }
   };
 
-  let makeList = (dataType) => {
-    let list = dataType.map((element, index) => {
-      return (
-        <div key={index}>
-          <h4>{`Description: ${element.description}`}</h4>
-          <h5>{`Amount: ${element.amount}`}</h5>
-          <h5>{`Date: ${element.date}`}</h5>
-          <p>---------------------------------------</p>
-        </div>
-      );
-    });
-    return list;
-  };
 
   //  Function to be called by Credits component upon submitting form (onClick)
   //  Set to update credits array state
@@ -79,7 +66,6 @@ const App = () => {
     <Credits
       accountBalance={accountBalance}
       credits={credits}
-      makeList={makeList}
       addCredit={addCredit}
     />
   );
