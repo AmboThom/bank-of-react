@@ -9,7 +9,7 @@ const Credits = (props) => {
     <div className="App">
       <h1>Credits</h1>
       <h3>Credit History</h3>
-      {<List dataType={props.credits} />}
+      <List dataType={props.credits} />
       <AccountBalance accountBalance={props.accountBalance} />
       <Link to="/">
         <button>Home</button>
