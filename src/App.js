@@ -10,7 +10,7 @@ const App = () => {
   const [accountBalance, setAccountBalance] = useState(14568.27);
   const [currentUser, setCurrentUser] = useState({
     userName: "Ambonique Thomas",
-    memberSince: "07/21/1992",
+    memberSince: "05/21/1992",
   });
   const [credits, setCredits] = useState([]);
   const [debits, setDebits] = useState([]);
