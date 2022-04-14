@@ -15,19 +15,23 @@ const App = () => {
   const [credits, setCredits] = useState([]);
   const [debits, setDebits] = useState([]);
 
+  let linkToCreditAPI = "https://moj-api.herokuapp.com/credits";
+  let linkToDebitsAPI = "https://moj-api.herokuapp.com/debits";
+
   const mockLogIn = (logInInfo) => {
     const newUser = { ...currentUser };
     newUser.userName = logInInfo.userName;
     setCurrentUser(newUser);
   };
 
+  //  Note: Equivalent to usage of lifecycle methods for class-implemented components made for functional components
+  //  Dependency list includes credits and debits arrays, will rerender components on those states change
   useEffect(() => {
-    let linkToCreditAPI = "https://moj-api.herokuapp.com/credits";
-    let linkToDebitsAPI = "https://moj-api.herokuapp.com/debits";
     fetchData(linkToCreditAPI, "credits");
     fetchData(linkToDebitsAPI, "debits");
   }, [credits, debits]);
 
+  //  Component to be called when component is mounted and updated (useEffect)
   const fetchData = async (link, dataType) => {
     try {
       let response = await axios.get(link);
@@ -42,11 +46,22 @@ const App = () => {
     }
   };
 
-
   //  Function to be called by Credits component upon submitting form (onClick)
   //  Set to update credits array state
-  const addCredit = (description, amount) => {
-    let creditsCopy = credits;
+  const addCredit = async (itemDescription, itemAmount) => {
+    try {
+      let response = await axios.post(linkToCreditAPI, {
+        description: itemDescription,
+        amount: itemAmount,
+      });
+      console.log(response);
+    }
+    catch (error) {
+      if (error.response) {
+        console.log(error.response.message);
+        console.log(error.response.status);
+      }
+    }
   };
 
   //  TODO: Make addDebit function, pass it as props to Debits component
