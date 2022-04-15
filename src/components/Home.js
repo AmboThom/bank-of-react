@@ -12,6 +12,7 @@ const Home = (props) => {
             <Link to="/userProfile"><button>User Profile</button></Link>
             <Link to="/login"><button>Login</button></Link>
             <Link to="/credits"><button>Credits</button></Link>
+            <Link to="/debits"><button>Debits</button></Link>
             <br/><br/>
             <AccountBalance accountBalance={props.accountBalance}/>
         </div>
