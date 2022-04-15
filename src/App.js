@@ -4,6 +4,7 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import UserProfile from "./components/UserProfile";
 import Credits from "./components/Credits";
+import Debits from "./components/Debits";
 import axios from "axios";
 
 const App = () => {
@@ -29,7 +30,7 @@ const App = () => {
   useEffect(() => {
     fetchData(linkToCreditAPI, "credits");
     fetchData(linkToDebitsAPI, "debits");
-  }, [credits, debits]);
+  }, []);
 
   //  Component to be called when component is mounted and updated (useEffect)
   const fetchData = async (link, dataType) => {
@@ -48,13 +49,15 @@ const App = () => {
 
   //  Function to be called by Credits component upon submitting form (onClick)
   //  Set to update credits array state
-  const addCredit = async (itemDescription, itemAmount) => {
+  const addItem = async (dataType, itemDescription, itemAmount) => {
     try {
-      let response = await axios.post(linkToCreditAPI, {
+      let link = dataType === "credits" ? linkToCreditAPI : linkToDebitsAPI;
+      let response = await axios.post(link, {
         description: itemDescription,
         amount: itemAmount,
       });
       console.log(response);
+      fetchData(link, dataType);
     }
     catch (error) {
       if (error.response) {
@@ -65,6 +68,14 @@ const App = () => {
   };
 
   //  TODO: Make addDebit function, pass it as props to Debits component
+
+  const DebitComponent = () => ( 
+    <Debits 
+      accountBalance={accountBalance}
+      debits={debits}
+      addItem={addItem}
+    />
+    );
   //  Should be similar in format to addCredit, check on with JSON returned from Debits API link
 
   const HomeComponent = () => <Home accountBalance={accountBalance} />;
@@ -81,7 +92,7 @@ const App = () => {
     <Credits
       accountBalance={accountBalance}
       credits={credits}
-      addCredit={addCredit}
+      addItem={addItem}
     />
   );
 
@@ -92,6 +103,7 @@ const App = () => {
         <Route exact path="/userProfile" render={UserProfileComponent} />
         <Route exact path="/login" render={LogInComponent} />
         <Route exact path="/credits" render={CreditComponent} />
+        <Route exact path="/debits" render={DebitComponent} />
       </div>
     </Router>
   );
