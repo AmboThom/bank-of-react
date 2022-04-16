@@ -30,15 +30,22 @@ const App = () => {
   useEffect(() => {
     fetchData(linkToCreditAPI, "credits");
     fetchData(linkToDebitsAPI, "debits");
-  }, []);
+    getSum();
+  }, [credits, debits]);
 
   //  Component to be called when component is mounted and updated (useEffect)
   const fetchData = async (link, dataType) => {
     try {
       let response = await axios.get(link);
       console.log(response);
-      if (dataType === "credits") setCredits(response.data);
-      else setDebits(response.data);
+      if (dataType === "credits" && response.data.length !== credits.length) {
+        setCredits(response.data);
+      } 
+      else {
+        if (response.data.length !== debits.length) {
+          setDebits(response.data);
+        }
+      }
     } catch (error) {
       if (error.response) {
         console.log(error.response.message);
@@ -67,16 +74,13 @@ const App = () => {
     }
   };
 
-  //  TODO: Make addDebit function, pass it as props to Debits component
-
-  const DebitComponent = () => ( 
-    <Debits 
-      accountBalance={accountBalance}
-      debits={debits}
-      addItem={addItem}
-    />
-    );
-  //  Should be similar in format to addCredit, check on with JSON returned from Debits API link
+  const getSum = () => {
+    let creditsSum = 0;
+    credits.forEach((element) => {creditsSum += element.amount});
+    let debitsSum = 0;
+    debits.forEach((element) => {debitsSum += element.amount});
+    setAccountBalance((creditsSum - debitsSum).toFixed(2));
+  };
 
   const HomeComponent = () => <Home accountBalance={accountBalance} />;
   const UserProfileComponent = () => (
@@ -95,6 +99,13 @@ const App = () => {
       addItem={addItem}
     />
   );
+  const DebitComponent = () => ( 
+    <Debits 
+      accountBalance={accountBalance}
+      debits={debits}
+      addItem={addItem}
+    />
+    );
 
   return (
     <Router>
