@@ -38,6 +38,8 @@ const App = () => {
     try {
       let response = await axios.get(link);
       console.log(response);
+
+      //  Conditions to prevent assigning data to wrong array & unnecessary calls to state setter functions
       if (dataType === "credits" && response.data.length !== credits.length) {
         setCredits(response.data);
       } 
@@ -74,6 +76,7 @@ const App = () => {
     }
   };
 
+  // Called from useEffect, sets the accurate Account Balance of the user
   const getSum = () => {
     let creditsSum = 0;
     credits.forEach((element) => {creditsSum += element.amount});
