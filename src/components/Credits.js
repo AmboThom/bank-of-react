@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import "../App.css";
 import AccountBalance from "./AccountBalance";
 import { Link } from "react-router-dom";
 import List from "./List";
 
 const Credits = (props) => {
+  const [addCredit, setAddCredit] = useState(false);
+
+  // const creditForm = () => {
+  //   return (
+
+  //   );
+  // };
+
   return (
     <div className="App">
       <h1>Credits</h1>

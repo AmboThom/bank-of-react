@@ -5,7 +5,7 @@ const List = (props) => {
         return (
         <div key={index}>
             <h4>{`Description: ${element.description}`}</h4>
-            <h5>{`Amount: ${element.amount}`}</h5>
+            <h5>{`Amount: $${element.amount}`}</h5>
             <h5>{`Date: ${element.date}`}</h5>
             <p>---------------------------------------</p>
         </div>
