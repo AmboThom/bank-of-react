@@ -16,8 +16,8 @@ const App = () => {
   const [credits, setCredits] = useState([]);
   const [debits, setDebits] = useState([]);
 
-  let linkToCreditAPI = "https://moj-api.herokuapp.com/credits";
-  let linkToDebitsAPI = "https://moj-api.herokuapp.com/debits";
+  const linkToCreditAPI = "https://moj-api.herokuapp.com/credits";
+  const linkToDebitsAPI = "https://moj-api.herokuapp.com/debits";
 
   const mockLogIn = (logInInfo) => {
     const newUser = { ...currentUser };
@@ -28,17 +28,24 @@ const App = () => {
   //  Note: Equivalent to usage of lifecycle methods for class-implemented components made for functional components
   //  Dependency list includes credits and debits arrays, will rerender components on those states change
   useEffect(() => {
-    fetchData(linkToCreditAPI, "credits");
-    fetchData(linkToDebitsAPI, "debits");
-  }, []);
+    //  This will wait until both async functions have been called before calling getSum
+    Promise.all([fetchData()]).then(getSum());
+    }, [credits, debits]);
 
   //  Component to be called when component is mounted and updated (useEffect)
-  const fetchData = async (link, dataType) => {
+  const fetchData = async () => {
     try {
-      let response = await axios.get(link);
+      let response = await axios.get(linkToCreditAPI);
       console.log(response);
-      if (dataType === "credits") setCredits(response.data);
-      else setDebits(response.data);
+      //  Conditions to prevent assigning data to wrong array & unnecessary calls to state setter functions
+      if (response.data.length !== credits.length) {
+        setCredits(response.data);
+      } 
+      let response2 = await axios.get(linkToDebitsAPI);
+      console.log(response2);
+        if (response2.data.length !== debits.length) {
+          setDebits(response2.data);
+        }
     } catch (error) {
       if (error.response) {
         console.log(error.response.message);
@@ -47,7 +54,7 @@ const App = () => {
     }
   };
 
-  //  Function to be called by Credits component upon submitting form (onClick)
+  //  Function to be called by Credits and Debits component upon submitting form (onClick)
   //  Set to update credits array state
   const addItem = async (dataType, itemDescription, itemAmount) => {
     try {
@@ -57,7 +64,7 @@ const App = () => {
         amount: itemAmount,
       });
       console.log(response);
-      fetchData(link, dataType);
+      Promise.all([fetchData()]).then(getSum());
     }
     catch (error) {
       if (error.response) {
@@ -67,16 +74,14 @@ const App = () => {
     }
   };
 
-  //  TODO: Make addDebit function, pass it as props to Debits component
-
-  const DebitComponent = () => ( 
-    <Debits 
-      accountBalance={accountBalance}
-      debits={debits}
-      addItem={addItem}
-    />
-    );
-  //  Should be similar in format to addCredit, check on with JSON returned from Debits API link
+  // Called from useEffect, sets the accurate Account Balance of the user
+  const getSum = () => {
+    let creditsSum = 0;
+    credits.forEach((element) => {creditsSum += element.amount});
+    let debitsSum = 0;
+    debits.forEach((element) => {debitsSum += element.amount});
+    setAccountBalance((creditsSum - debitsSum).toFixed(2));
+  };
 
   const HomeComponent = () => <Home accountBalance={accountBalance} />;
   const UserProfileComponent = () => (
@@ -95,6 +100,13 @@ const App = () => {
       addItem={addItem}
     />
   );
+  const DebitComponent = () => ( 
+    <Debits 
+      accountBalance={accountBalance}
+      debits={debits}
+      addItem={addItem}
+    />
+    );
 
   return (
     <Router>
