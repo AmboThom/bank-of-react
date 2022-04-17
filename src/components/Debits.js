@@ -1,16 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import "../App.css";
 import AccountBalance from "./AccountBalance";
 import { Link } from "react-router-dom";
 import List from "./List";
 
 const Debits = (props) => {
+  const [addDebit, setAddDebit] = useState(false);
+
   return (
     <div className="App">
       <h1>Debits</h1>
-      <h3>Debit History</h3>
-      <List dataType={props.debits} />
       <AccountBalance accountBalance={props.accountBalance} />
+      <h3>Debit History</h3>
+      <div className="list">
+        <List dataType={props.debits} />
+      </div>
+      <button onClick={() => {setAddDebit(true)}}>Add Debit</button>
       <Link to="/">
         <button>Home</button>
       </Link>

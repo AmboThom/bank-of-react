@@ -6,6 +6,7 @@ import UserProfile from "./components/UserProfile";
 import Credits from "./components/Credits";
 import Debits from "./components/Debits";
 import axios from "axios";
+import { v4 as uuidv4 } from 'uuid';
 
 const App = () => {
   const [accountBalance, setAccountBalance] = useState(14568.27);
@@ -15,6 +16,7 @@ const App = () => {
   });
   const [credits, setCredits] = useState([]);
   const [debits, setDebits] = useState([]);
+  const [useAPI, setUseAPI] = useState(true);
 
   const linkToCreditAPI = "https://moj-api.herokuapp.com/credits";
   const linkToDebitsAPI = "https://moj-api.herokuapp.com/debits";
@@ -29,7 +31,9 @@ const App = () => {
   //  Dependency list includes credits and debits arrays, will rerender components on those states change
   useEffect(() => {
     //  This will wait until both async functions have been called before calling getSum
-    Promise.all([fetchData()]).then(getSum());
+    if (useAPI) {
+      Promise.all([fetchData()]).then(getSum());
+    }
     }, [credits, debits]);
 
   //  Component to be called when component is mounted and updated (useEffect)
@@ -55,23 +59,18 @@ const App = () => {
   };
 
   //  Function to be called by Credits and Debits component upon submitting form (onClick)
-  //  Set to update credits array state
-  const addItem = async (dataType, itemDescription, itemAmount) => {
-    try {
-      let link = dataType === "credits" ? linkToCreditAPI : linkToDebitsAPI;
-      let response = await axios.post(link, {
+  //  Set to update credits and debits array state -- addCredits and addDebits as a single function
+  const addItem = (dataType, itemDescription, itemAmount) => {
+      setUseAPI(false);
+      let response = {
+        id: uuidv4(), //  Using uuid library to generate unique id
         description: itemDescription,
         amount: itemAmount,
-      });
-      console.log(response);
-      Promise.all([fetchData()]).then(getSum());
-    }
-    catch (error) {
-      if (error.response) {
-        console.log(error.response.message);
-        console.log(error.response.status);
-      }
-    }
+        date: new Date().toString(), 
+      };
+      dataType.push(response);
+      console.log(dataType);
+      getSum();
   };
 
   // Called from useEffect, sets the accurate Account Balance of the user
