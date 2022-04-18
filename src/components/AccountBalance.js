@@ -3,9 +3,7 @@ import React from 'react';
 const AccountBalance = (props) => {
     return (
         <div>
-            <strong>
-                {`Current Balance: $${props.accountBalance}`}
-            </strong>
+            <strong><h4>{`Current Balance: $${props.accountBalance}`}</h4></strong>
         </div>
     );
 }
