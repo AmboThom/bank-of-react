@@ -5,7 +5,7 @@ import "../App.css";
 // or use react-hook-form library or regular html forms 
 
 const Form = (props) => {
-    return (<h1>Hi</h1>); // Placeholder
+    return (<h1>Did this get through?</h1>); // Placeholder
 };
 
 export default Form;
