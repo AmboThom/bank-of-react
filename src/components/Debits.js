@@ -3,6 +3,7 @@ import "../App.css";
 import AccountBalance from "./AccountBalance";
 import { Link } from "react-router-dom";
 import List from "./List";
+import Form from "./Form";
 
 const Debits = (props) => {
   const [addDebit, setAddDebit] = useState(false);
@@ -16,6 +17,7 @@ const Debits = (props) => {
         <List dataType={props.debits} />
       </div>
       <button onClick={() => {setAddDebit(true)}}>Add Debit</button>
+      {addDebit && <Form addItem={props.addItem} />}
       <Link to="/">
         <button>Home</button>
       </Link>
