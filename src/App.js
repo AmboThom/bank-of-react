@@ -6,7 +6,7 @@ import UserProfile from "./components/UserProfile";
 import Credits from "./components/Credits";
 import Debits from "./components/Debits";
 import axios from "axios";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const App = () => {
   const [accountBalance, setAccountBalance] = useState(14568.27);
@@ -34,7 +34,7 @@ const App = () => {
     if (useAPI) {
       Promise.all([fetchData()]).then(getSum());
     }
-    }, [credits, debits]);
+  }, [credits, debits]);
 
   //  Component to be called when component is mounted and updated (useEffect)
   const fetchData = async () => {
@@ -44,12 +44,12 @@ const App = () => {
       //  Conditions to prevent assigning data to wrong array & unnecessary calls to state setter functions
       if (response.data.length !== credits.length) {
         setCredits(response.data);
-      } 
+      }
       let response2 = await axios.get(linkToDebitsAPI);
       console.log(response2);
-        if (response2.data.length !== debits.length) {
-          setDebits(response2.data);
-        }
+      if (response2.data.length !== debits.length) {
+        setDebits(response2.data);
+      }
     } catch (error) {
       if (error.response) {
         console.log(error.response.message);
@@ -60,25 +60,29 @@ const App = () => {
 
   //  Function to be called by Credits and Debits component upon submitting form (onClick)
   //  Set to update credits and debits array state -- addCredits and addDebits as a single function
-  const addItem = (dataType, itemDescription, itemAmount) => {
-      setUseAPI(false);
-      let response = {
-        id: uuidv4(), //  Using uuid library to generate unique id
-        description: itemDescription,
-        amount: itemAmount,
-        date: new Date().toString(), 
-      };
-      dataType.push(response);
-      console.log(dataType);
-      getSum();
+  const addItem = (array, itemDescription, itemAmount) => {
+    setUseAPI(false);
+    let response = {
+      id: uuidv4(), //  Using uuid library to generate unique id
+      description: itemDescription,
+      amount: parseFloat(itemAmount),
+      date: new Date().toISOString(),
+    };
+    array.push(response);
+    console.log(array);
+    getSum();
   };
 
   // Called from useEffect, sets the accurate Account Balance of the user
   const getSum = () => {
     let creditsSum = 0;
-    credits.forEach((element) => {creditsSum += element.amount});
+    credits.forEach((element) => {
+      creditsSum += element.amount;
+    });
     let debitsSum = 0;
-    debits.forEach((element) => {debitsSum += element.amount});
+    debits.forEach((element) => {
+      debitsSum += element.amount;
+    });
     setAccountBalance((creditsSum - debitsSum).toFixed(2));
   };
 
@@ -99,13 +103,9 @@ const App = () => {
       addItem={addItem}
     />
   );
-  const DebitComponent = () => ( 
-    <Debits 
-      accountBalance={accountBalance}
-      debits={debits}
-      addItem={addItem}
-    />
-    );
+  const DebitComponent = () => (
+    <Debits accountBalance={accountBalance} debits={debits} addItem={addItem} />
+  );
 
   return (
     <Router>
